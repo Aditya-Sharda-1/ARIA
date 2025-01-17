@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wanderlust Adventures - Your Journey Begins Here</title>
+
+    <style>
+      .sound-control {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Audio Elements -->
+    <audio id="background-music" loop>
+      <source src="AUD-20240906-WA0068.mp3" type="audio/mp3" />
+    </audio>
+
+    <audio id="button-click">
+      <source src="AUD-20240906-WA0068.mp3" type="audio/mp3" />
+    </audio>
+
+    <audio id="hover-sound">
+      <source src="AUD-20240906-WA0068.mp3" type="Audio/mp3" />
+    </audio>
+
+    <audio id="success-sound">
+      <source src="AUD-20240906-WA0068.mp3" type="audio/mp3" />
+    </audio>
+
+    <audio id="error-sound">
+      <source src="AUD-20240906-WA0068.mp3" type="audio/mp3" />
+    </audio>
+
+    <!-- Sound Controls -->
+    <div class="sound-control">
+      <button
+        id="toggle-sound"
+        aria-label="Toggle sound"
+        onclick="toggleSound()"
+      >
+        🔊
+      </button>
+      <div id="volume-control">
+        <label for="volume">Volume</label>
+        <input
+          type="range"
+          id="volume"
+          min="0"
+          max="1"
+          step="0.1"
+          value="0.5"
+          aria-label="Adjust volume"
+        />
+      </div>
+    </div>
+
+    <!-- Skip Navigation -->
+    <a href="#main-content" class="skip-link" aria-label="Skip to main content"
+      >Jump to adventures</a
+    >
+
+    <!-- Header -->
+    <header role="banner">
+      <div class="logo-container">
+        <a href="/" aria-label="Return to Wanderlust home" class="sound-hover">
+          <img
+            src="wanderlust-logo.png"
+            alt="Wanderlust Adventures - A compass pointing to new horizons"
+          />
+        </a>
+      </div>
+
+      <!-- Main Navigation -->
+      <nav role="navigation" aria-label="Main navigation">
+        <button
+          aria-expanded="false"
+          aria-controls="nav-menu"
+          aria-label="Explore our site"
+          class="sound-click"
+        >
+          Explore ↓
+        </button>
+
+        <ul id="nav-menu" role="menubar">
+          <li role="none">
+            <a href="#" role="menuitem" aria-current="page" class="sound-hover"
+              >Your Journey</a
+            >
+          </li>
+          <li role="none">
+            <button
+              role="menuitem"
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-controls="adventures-menu"
+              class="sound-click"
+            >
+              Adventures
+            </button>
+            <ul
+              id="adventures-menu"
+              role="menu"
+              aria-label="Types of adventures"
+              hidden
+            >
+              <li role="none">
+                <a href="#" role="menuitem" class="sound-hover"
+                  >Mountain Escapes</a
+                >
+              </li>
+              <li role="none">
+                <a href="#" role="menuitem" class="sound-hover">Ocean Dreams</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" role="main">
+      <!-- Your existing content here -->
+    </main>
+
+    <script>
+      // Audio Control System
+      let isSoundEnabled = true;
+      const allAudios = document.querySelectorAll("audio");
+      const volumeControl = document.getElementById("volume");
+      const soundButton = document.getElementById("toggle-sound");
+
+      // Initialize all audio volumes
+      function initializeAudio() {
+        allAudios.forEach((audio) => {
+          audio.volume = volumeControl.value;
+        });
+      }
+
+      // Toggle sound on/off
+      function toggleSound() {
+        isSoundEnabled = !isSoundEnabled;
+        soundButton.textContent = isSoundEnabled ? "🔊" : "🔈";
+        soundButton.setAttribute(
+          "aria-label",
+          isSoundEnabled ? "Mute sound" : "Unmute sound"
+        );
+
+        if (!isSoundEnabled) {
+          allAudios.forEach((audio) => {
+            audio.pause();
+          });
+        }
+      }
+
+      // Volume control
+      volumeControl.addEventListener("input", (e) => {
+        const volume = e.target.value;
+        allAudios.forEach((audio) => {
+          audio.volume = volume;
+        });
+      });
+
+      // Background Music Control
+      const bgMusic = document.getElementById("background-music");
+
+      // Play background music on first user interaction
+      document.addEventListener(
+        "click",
+        () => {
+          if (isSoundEnabled && bgMusic.paused) {
+            bgMusic.play();
+          }
+        },
+        { once: true }
+      );
+
+      // Button Click Sound
+      function playButtonSound() {
+        if (isSoundEnabled) {
+          const buttonSound = document.getElementById("button-click");
+          buttonSound.currentTime = 0; // Reset sound
+          buttonSound.play();
+        }
+      }
+
+      // Hover Sound
+      function playHoverSound() {
+        if (isSoundEnabled) {
+          const hoverSound = document.getElementById("hover-sound");
+          hoverSound.currentTime = 0;
+          hoverSound.play();
+        }
+      }
+
+      // Success Sound
+      function playSuccessSound() {
+        if (isSoundEnabled) {
+          const successSound = document.getElementById("success-sound");
+          successSound.currentTime = 0;
+          successSound.play();
+        }
+      }
+
+      // Error Sound
+      function playErrorSound() {
+        if (isSoundEnabled) {
+          const errorSound = document.getElementById("error-sound");
+          errorSound.currentTime = 0;
+          errorSound.play();
+        }
+      }
+
+      // Add sound to interactive elements
+      document.querySelectorAll(".sound-click").forEach((element) => {
+        element.addEventListener("click", playButtonSound);
+      });
+
+      document.querySelectorAll(".sound-hover").forEach((element) => {
+        element.addEventListener("mouseenter", playHoverSound);
+      });
+
+      // Form submission sounds
+      document.querySelectorAll("form").forEach((form) => {
+        form.addEventListener("submit", (e) => {
+          e.preventDefault();
+          // Simulate form validation
+          if (Math.random() > 0.5) {
+            // Success simulation
+            playSuccessSound();
+          } else {
+            // Error simulation
+            playErrorSound();
+          }
+        });
+      });
+
+      // Initialize audio system
+      initializeAudio();
+    </script>
+  </body>
+</html>
